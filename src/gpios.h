@@ -10,8 +10,14 @@ class gpioHandler : public QObject{
 public:
     gpioHandler();
 
+signals:
+    void gpioTriggered(int gpioNum);
+
 public slots:
     void Init(int pGpioNum);
+
+    bool checkGpio(int gpioNum);
+
 };
 
 #endif

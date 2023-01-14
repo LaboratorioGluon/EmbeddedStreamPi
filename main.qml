@@ -11,6 +11,12 @@ ApplicationWindow {
     height: 600
 
     property int contador: 0
+    property var isPhysicalPressed: 0;
+
+    Timer {
+        interval: 150; running: true; repeat: true
+        onTriggered: isPhysicalPressed = _gpioHandler.checkGpio(29)
+    }
 
     //a button in the middle of the content area
     Button {
@@ -42,7 +48,7 @@ ApplicationWindow {
       id: rectangleId
       width: 50
       height: 50
-      color: helloWorldButton.pressed?"red":"green"
+      color: isPhysicalPressed?"red":"green"
       anchors.top : labelcontador2.bottom
       anchors.horizontalCenter : helloWorldButton.horizontalCenter
 
