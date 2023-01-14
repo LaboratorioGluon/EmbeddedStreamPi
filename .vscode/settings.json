@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.abs": "json",
+        "qqmlapplicationengine": "cpp"
+    }
+}
