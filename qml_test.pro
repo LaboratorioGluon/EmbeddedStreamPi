@@ -15,6 +15,11 @@ INCLUDEPATH += . src/
 
 QT += widgets quick
 
+#CONFIG += DEBUG
+CONFIG+=qml_debug
+
+QMAKE_CXXFLAGS+= -g
+
 LIBS +=  -L"/usr/lib/" -lwiringPi
 
 # Input

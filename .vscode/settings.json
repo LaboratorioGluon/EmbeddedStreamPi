@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "*.abs": "json",
-        "qqmlapplicationengine": "cpp"
+        "qqmlapplicationengine": "cpp",
+        "thread": "cpp"
     }
 }

@@ -13,10 +13,23 @@ ApplicationWindow {
     property int contador: 0
     property var isPhysicalPressed: 0;
 
-    Timer {
+
+    Connections {
+        target: _gpioHandler 
+        function onGpioTriggered(gpioNum) { 
+          //qmlString = signalString
+          var pin = gpioNum
+          print("Se ha pulsado el boton : " + gpioNum);
+          
+          rectangleId.color = rectangleId.color=="#ff0000"?"green":"red"
+          print(rectangleId.color)
+        }
+    }
+
+    /*Timer {
         interval: 150; running: true; repeat: true
         onTriggered: isPhysicalPressed = _gpioHandler.checkGpio(29)
-    }
+    }*/
 
     //a button in the middle of the content area
     Button {
@@ -26,7 +39,6 @@ ApplicationWindow {
         anchors.verticalCenter: parent.verticalCenter   
         onClicked:{
           contador++
-          _gpioHandler.Init(10)
         }
     }
     
@@ -48,7 +60,7 @@ ApplicationWindow {
       id: rectangleId
       width: 50
       height: 50
-      color: isPhysicalPressed?"red":"green"
+      color: "green"
       anchors.top : labelcontador2.bottom
       anchors.horizontalCenter : helloWorldButton.horizontalCenter
 

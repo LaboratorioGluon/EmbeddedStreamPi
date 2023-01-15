@@ -14,9 +14,9 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_QUICK_LIB -DQT_GUI_LIB -DQT_QMLMODELS_LIB -DQT_QML_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_QML_DEBUG -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_QUICK_LIB -DQT_GUI_LIB -DQT_QMLMODELS_LIB -DQT_QML_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -O2 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -g -O2 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I. -I. -Isrc -I/usr/include/aarch64-linux-gnu/qt5 -I/usr/include/aarch64-linux-gnu/qt5/QtWidgets -I/usr/include/aarch64-linux-gnu/qt5/QtQuick -I/usr/include/aarch64-linux-gnu/qt5/QtGui -I/usr/include/aarch64-linux-gnu/qt5/QtQmlModels -I/usr/include/aarch64-linux-gnu/qt5/QtQml -I/usr/include/aarch64-linux-gnu/qt5/QtNetwork -I/usr/include/aarch64-linux-gnu/qt5/QtCore -I. -I/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++
 QMAKE         = /usr/lib/qt5/bin/qmake
 DEL_FILE      = rm -f
@@ -120,11 +120,13 @@ DIST          = /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/resolve_config.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/default_post.prf \
+		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qml_debug.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/warn_on.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qt.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/resources_functions.prf \
@@ -215,11 +217,13 @@ Makefile: qml_test.pro /usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++/qmake.co
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/resolve_config.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/default_post.prf \
+		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qml_debug.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/warn_on.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qt.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/resources_functions.prf \
@@ -299,11 +303,13 @@ Makefile: qml_test.pro /usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++/qmake.co
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/resolve_config.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/default_post.prf:
+/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qml_debug.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/warn_on.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qt.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/resources_functions.prf:
@@ -365,7 +371,7 @@ compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
 moc_predefs.h: /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
-	g++ -pipe -O2 -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
+	g++ -pipe -g -O2 -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
 compiler_moc_header_make_all: moc_gpios.cpp
 compiler_moc_header_clean:
