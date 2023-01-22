@@ -1,3 +1,5 @@
 moc_**
 *.o
 qml_test
+*.stash
+src/secret.h

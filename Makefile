@@ -53,10 +53,14 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = main.cpp \
-		src/gpios.cpp moc_gpios.cpp
+		src/gpios.cpp \
+		src/irc.cpp moc_gpios.cpp \
+		moc_irc.cpp
 OBJECTS       = main.o \
 		gpios.o \
-		moc_gpios.o
+		irc.o \
+		moc_gpios.o \
+		moc_irc.o
 DIST          = /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -141,8 +145,11 @@ DIST          = /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		qml_test.pro src/gpios.h main.cpp \
-		src/gpios.cpp
+		qml_test.pro src/gpios.h \
+		src/irc.h \
+		src/secret.h main.cpp \
+		src/gpios.cpp \
+		src/irc.cpp
 QMAKE_TARGET  = qml_test
 DESTDIR       = 
 TARGET        = qml_test
@@ -340,8 +347,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/gpios.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp src/gpios.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/gpios.h src/irc.h src/secret.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp src/gpios.cpp src/irc.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -373,13 +380,18 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -O2 -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_gpios.cpp
+compiler_moc_header_make_all: moc_gpios.cpp moc_irc.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_gpios.cpp
+	-$(DEL_FILE) moc_gpios.cpp moc_irc.cpp
 moc_gpios.cpp: src/gpios.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/pi/qml_test/moc_predefs.h -I/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/pi/qml_test -I/home/pi/qml_test -I/home/pi/qml_test/src -I/usr/include/aarch64-linux-gnu/qt5 -I/usr/include/aarch64-linux-gnu/qt5/QtWidgets -I/usr/include/aarch64-linux-gnu/qt5/QtQuick -I/usr/include/aarch64-linux-gnu/qt5/QtGui -I/usr/include/aarch64-linux-gnu/qt5/QtQmlModels -I/usr/include/aarch64-linux-gnu/qt5/QtQml -I/usr/include/aarch64-linux-gnu/qt5/QtNetwork -I/usr/include/aarch64-linux-gnu/qt5/QtCore -I/usr/include/c++/10 -I/usr/include/aarch64-linux-gnu/c++/10 -I/usr/include/c++/10/backward -I/usr/lib/gcc/aarch64-linux-gnu/10/include -I/usr/local/include -I/usr/include/aarch64-linux-gnu -I/usr/include src/gpios.h -o moc_gpios.cpp
+
+moc_irc.cpp: src/irc.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/pi/qml_test/moc_predefs.h -I/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/pi/qml_test -I/home/pi/qml_test -I/home/pi/qml_test/src -I/usr/include/aarch64-linux-gnu/qt5 -I/usr/include/aarch64-linux-gnu/qt5/QtWidgets -I/usr/include/aarch64-linux-gnu/qt5/QtQuick -I/usr/include/aarch64-linux-gnu/qt5/QtGui -I/usr/include/aarch64-linux-gnu/qt5/QtQmlModels -I/usr/include/aarch64-linux-gnu/qt5/QtQml -I/usr/include/aarch64-linux-gnu/qt5/QtNetwork -I/usr/include/aarch64-linux-gnu/qt5/QtCore -I/usr/include/c++/10 -I/usr/include/aarch64-linux-gnu/c++/10 -I/usr/include/c++/10/backward -I/usr/lib/gcc/aarch64-linux-gnu/10/include -I/usr/local/include -I/usr/include/aarch64-linux-gnu -I/usr/include src/irc.h -o moc_irc.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -397,14 +409,24 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 
 ####### Compile
 
-main.o: main.cpp src/gpios.h
+main.o: main.cpp globals.h \
+		src/gpios.h \
+		src/irc.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
-gpios.o: src/gpios.cpp src/gpios.h
+gpios.o: src/gpios.cpp src/gpios.h \
+		globals.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o gpios.o src/gpios.cpp
+
+irc.o: src/irc.cpp src/irc.h \
+		src/secret.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o irc.o src/irc.cpp
 
 moc_gpios.o: moc_gpios.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_gpios.o moc_gpios.cpp
+
+moc_irc.o: moc_irc.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_irc.o moc_irc.cpp
 
 ####### Install
 

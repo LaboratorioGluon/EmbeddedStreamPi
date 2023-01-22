@@ -1,6 +1,7 @@
 //import related modules
 import QtQuick 2.3
 import QtQuick.Controls 2.15
+import "views/widgets/"
 
 //window containing the application
 ApplicationWindow {
@@ -17,19 +18,27 @@ ApplicationWindow {
     Connections {
         target: _gpioHandler 
         function onGpioTriggered(gpioNum) { 
-          //qmlString = signalString
-          var pin = gpioNum
-          print("Se ha pulsado el boton : " + gpioNum);
-          
-          rectangleId.color = rectangleId.color=="#ff0000"?"green":"red"
-          print(rectangleId.color)
+            //qmlString = signalString
+            var pin = gpioNum
+            print("Se ha pulsado el boton : " + gpioNum);
+            
+            rectangleId.color = rectangleId.color=="#ff0000"?"green":"red"
+            _gpioHandler.changeScreenGpio(0)
+            print(rectangleId.color)
         }
     }
 
-    /*Timer {
-        interval: 150; running: true; repeat: true
-        onTriggered: isPhysicalPressed = _gpioHandler.checkGpio(29)
-    }*/
+    
+
+    // Boton de apagado
+    Button{
+        id:turnOffScreenButton
+        text: "Off"
+        onClicked: _gpioHandler.changeScreenGpio(1)
+        anchors.right: parent.right
+        anchors.top: parent.top
+    }
+    IrcChat{}
 
     //a button in the middle of the content area
     Button {

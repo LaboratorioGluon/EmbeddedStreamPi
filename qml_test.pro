@@ -13,7 +13,7 @@ INCLUDEPATH += . src/
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-QT += widgets quick
+QT += widgets quick network
 
 #CONFIG += DEBUG
 CONFIG+=qml_debug
@@ -23,5 +23,5 @@ QMAKE_CXXFLAGS+= -g
 LIBS +=  -L"/usr/lib/" -lwiringPi
 
 # Input
-HEADERS += src/gpios.h
-SOURCES += main.cpp src/gpios.cpp
+HEADERS += src/gpios.h src/irc.h src/secret.h
+SOURCES += main.cpp src/gpios.cpp src/irc.cpp 

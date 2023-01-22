@@ -7,6 +7,8 @@
 
 #include "globals.h"
 
+#define SCREEN_ONOFF 23
+
 long long timeInMilliseconds(void) {
     struct timeval tv;
 
@@ -28,24 +30,13 @@ gpioHandler::gpioHandler()
 {
     //wiringPiSetup () ;
     qDebug() << "Initialize: " << wiringPiSetupSys();
+    pinMode(SCREEN_ONOFF, OUTPUT);
     pinMode (21, INPUT);
     wiringPiISR(21, INT_EDGE_RISING, ISR);
+
+    pinMode(SCREEN_ONOFF, OUTPUT);
 }
-#if 0
-void gpioHandler::run(){
-    while(1)
-    {
-        /*for(int i = 0; i < 64 ; i++){
-            qDebug() << "Wait: "<< i << " -- " << waitForInterrupt(i, 100);
-        }*/
-        //waitForInterrupt(21,100);
-        if(digitalRead(21) == 1)
-            emit gpioTriggered(21);
-        //qDebug() << "Something happened";
-        QThread::msleep(100);
-    }
-}
-#endif
+
 bool gpioHandler::checkGpio(int gpioNum)
 {
     return digitalRead(gpioNum);
@@ -55,4 +46,9 @@ void gpioHandler::Init(int pGpioNum)
 {
     qDebug() << "Holi desde el Init! : " << pGpioNum;
     qDebug() << "Valor del pin: " << digitalRead(29);
+}
+
+void gpioHandler::changeScreenGpio(int newValue){
+    qDebug() << "Changing screen: "<< newValue;
+    digitalWrite(SCREEN_ONOFF, newValue);
 }

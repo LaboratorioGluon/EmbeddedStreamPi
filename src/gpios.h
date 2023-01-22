@@ -5,6 +5,7 @@
 #include <QThread>
 
 
+
 class gpioHandler : public QThread{
     Q_OBJECT
 public:
@@ -20,6 +21,8 @@ public slots:
     void Init(int pGpioNum);
 
     bool checkGpio(int gpioNum);
+
+    void changeScreenGpio(int newValue);
 
 };
 

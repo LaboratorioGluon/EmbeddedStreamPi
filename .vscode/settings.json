@@ -2,6 +2,8 @@
     "files.associations": {
         "*.abs": "json",
         "qqmlapplicationengine": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "iostream": "cpp",
+        "qstringlist": "cpp"
     }
 }
