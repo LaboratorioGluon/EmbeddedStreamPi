@@ -9,5 +9,8 @@ ListView {
     model: _ircHandler.writters
     delegate: Text {
         text: modelData
+        color: "white"
+        textFormat: Text.RichText
+        font.pointSize: 8
     }
 }

@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QStringList>
+#include <QMap>
+#include <QColor>
+#include <QRandomGenerator>
 
 class IRC: public QObject{
     Q_OBJECT
@@ -26,6 +29,11 @@ private:
     QTcpSocket *socket;
 
     QStringList writters;
+
+    QColor getColorForNickname(QString nickname);
+    QMap<QString, QColor> nicknameColors;
+
+    QRandomGenerator generator;
 };
 
 //void test_irc();

@@ -5,6 +5,7 @@
 #include <QQmlApplicationEngine>
 #include <QThread>
 #include <QCursor>
+#include <QtQml>
 
 #include "globals.h"
 #include "irc.h"
@@ -20,6 +21,8 @@ int main(int argc, char *argv[])
     // QQmlApplicationEngine is the preferred way to start qml projects since Qt 5.2
     QQmlApplicationEngine engine;
 
+    //qmlRegisterSingletonType(QUrl("qrc:///Style.qml"), "App", 1, 0, "Style");
+
     hIRC = new IRC();
     hIRC->Init();
     //test_irc();
@@ -27,11 +30,6 @@ int main(int argc, char *argv[])
     app.setOverrideCursor( QCursor( Qt::BlankCursor ) );
     hGpio = new gpioHandler();
     hGpio->start();
-    /*hGpio->moveToThread(&workerThread);
-    QObject::connect(&workerThread, &QThread::finished, hGpio, &QObject::deleteLater);
-    //QObject::connect(this, &Controller::operate, hGpio, &gpioHandler::doWork);
-    QObject::connect( &workerThread, &QThread::started, hGpio, &gpioHandler::mainLoop);
-    workerThread.start();*/
 
     
     engine.rootContext()->setContextProperty("_gpioHandler", hGpio);

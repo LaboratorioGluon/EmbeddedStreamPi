@@ -8,6 +8,7 @@
 #include <netdb.h>
 
 #include <QDebug>
+#include <QRandomGenerator>
 
 #include "secret.h" // provides OAUTH
 
@@ -82,14 +83,48 @@ void IRC::connected()
 void IRC::parseNewData()
 {
     QString data = socket->readAll();
-    int nickEnd = data.indexOf("!")-1;
+    int nickEnd = data.indexOf("!");
+    int msgStart = data.indexOf("PRIVMSG #labgluon :");
     qDebug() << "Datos RAW: "<<  data;
-    if( nickEnd != -1 )
+    if( nickEnd != -1 || msgStart != -1)
     {
-        QStringRef subString(&data, 1, nickEnd);
-        qDebug() << "Ha escrito: " << subString;
-        writters.append(data.mid(1, nickEnd));
+        // Offset from "PRIVMSG #labgluon :" start.
+        msgStart += 19;
+
+        int msgEnd = data.indexOf("\r\n", msgStart);
+        if(msgEnd == -1)
+        {
+            msgEnd = data.length()-1;
+        }
+
+        // nickEnd points to the character "!"
+        nickEnd = nickEnd - 1;
+        QStringRef nickname(&data, 1, nickEnd);
+        QStringRef message(&data, msgStart, msgEnd-msgStart);
+
+        ///qDebug() << nickname << ":" << message;
+        QString chatMessage = "<font color=\"" + getColorForNickname(data.mid(1,nickEnd)).name() +"\">" + data.mid(1,nickEnd) + "</font>:" + data.mid(msgStart, msgEnd-msgStart);
+        //writters.append(data.mid(1, nickEnd));
+        writters.append(chatMessage);
         emit newWritter();
     }
 
+}
+
+
+QColor IRC::getColorForNickname(QString nickname)
+{
+    if(nicknameColors.contains(nickname))
+    {
+        return nicknameColors[nickname];
+    }
+
+    QColor colorRandom(
+        generator.bounded(0,255),
+        generator.bounded(0,255),
+        generator.bounded(0,255)
+    );
+    qDebug() << "Nuevo color generado: " << colorRandom.name();
+    nicknameColors.insert(nickname, colorRandom);
+    return colorRandom;
 }
