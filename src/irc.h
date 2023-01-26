@@ -34,6 +34,8 @@ private:
     QMap<QString, QColor> nicknameColors;
 
     QRandomGenerator generator;
+
+    int receivedMessages;
 };
 
 //void test_irc();

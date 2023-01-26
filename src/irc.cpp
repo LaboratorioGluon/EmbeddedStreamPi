@@ -57,6 +57,7 @@ void ext_connect(int s, sockaddr * addr, unsigned long len )
 
 IRC::IRC(){
     socket = new QTcpSocket(this);
+    receivedMessages = 0;
     connect(socket, SIGNAL(connected()), this, SLOT(connected()));
     connect(socket, SIGNAL(readyRead()), this, SLOT(parseNewData()));
 }
@@ -83,6 +84,14 @@ void IRC::connected()
 void IRC::parseNewData()
 {
     QString data = socket->readAll();
+
+    // The first two messages are due to successful login
+    if (receivedMessages < 2)
+    {
+        receivedMessages++;
+        return;
+    }
+
     int nickEnd = data.indexOf("!");
     int msgStart = data.indexOf("PRIVMSG #labgluon :");
     qDebug() << "Datos RAW: "<<  data;
@@ -102,7 +111,6 @@ void IRC::parseNewData()
         QStringRef nickname(&data, 1, nickEnd);
         QStringRef message(&data, msgStart, msgEnd-msgStart);
 
-        ///qDebug() << nickname << ":" << message;
         QString chatMessage = "<font color=\"" + getColorForNickname(data.mid(1,nickEnd)).name() +"\">" + data.mid(1,nickEnd) + "</font>:" + data.mid(msgStart, msgEnd-msgStart);
         //writters.append(data.mid(1, nickEnd));
         writters.append(chatMessage);
@@ -119,11 +127,15 @@ QColor IRC::getColorForNickname(QString nickname)
         return nicknameColors[nickname];
     }
 
-    QColor colorRandom(
-        generator.bounded(0,255),
-        generator.bounded(0,255),
-        generator.bounded(0,255)
-    );
+
+
+    QColor colorRandom;
+    colorRandom.setHsv(
+        (10*nicknameColors.count())%360 + generator.bounded(0,10),
+        200,
+        255
+        );
+
     qDebug() << "Nuevo color generado: " << colorRandom.name();
     nicknameColors.insert(nickname, colorRandom);
     return colorRandom;

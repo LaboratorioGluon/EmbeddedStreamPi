@@ -36,6 +36,7 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.top: parent.top
     }
+    
     IrcChat{}
 
     //a button in the middle of the content area
