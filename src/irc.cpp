@@ -81,6 +81,16 @@ void IRC::connected()
     //send(sockd, message.c_str(), message.length(), 0);
     socket->write(message.toUtf8());
 }
+
+void IRC::sendText(QString message)
+{
+    QString privMsg = "PRIVMSG #labgluon :" + message + "\r\n";
+    writters.append("<font color=\"" + getColorForNickname("labgluon").name() +"\">labgluon</font>:" + message);
+
+    socket->write(privMsg.toUtf8());
+    emit newWritter();
+}
+
 void IRC::parseNewData()
 {
     QString data = socket->readAll();
@@ -108,8 +118,8 @@ void IRC::parseNewData()
 
         // nickEnd points to the character "!"
         nickEnd = nickEnd - 1;
-        QStringRef nickname(&data, 1, nickEnd);
-        QStringRef message(&data, msgStart, msgEnd-msgStart);
+        /*QStringRef nickname(&data, 1, nickEnd);
+        QStringRef message(&data, msgStart, msgEnd-msgStart);*/
 
         QString chatMessage = "<font color=\"" + getColorForNickname(data.mid(1,nickEnd)).name() +"\">" + data.mid(1,nickEnd) + "</font>:" + data.mid(msgStart, msgEnd-msgStart);
         //writters.append(data.mid(1, nickEnd));

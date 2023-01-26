@@ -1,6 +1,8 @@
 //import related modules
 import QtQuick 2.3
 import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.0
+
 import "views/widgets/"
 
 //window containing the application
@@ -21,9 +23,7 @@ ApplicationWindow {
     Connections {
         target: _gpioHandler 
         function onGpioTriggered(gpioNum) { 
-            //qmlString = signalString
-            var pin = gpioNum
-            print("Se ha pulsado el boton : " + gpioNum);            
+            var pin = gpioNum         
             _gpioHandler.changeScreenGpio(0)
         }
     }
@@ -36,25 +36,57 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.top: parent.top
     }
-    
-    IrcChat{}
 
-    //a button in the middle of the content area
-    Button {
-        id:helloWorldButton
-        text: qsTr("Hello World")
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter   
-        onClicked:{
-          contador++
-        }
+    IrcChat{ 
+        id: ircChatId
+        width: 250
+        height: parent.height
     }
-    
-    Label {
-      id:labelcontador
-      text: "Has pulsado " + contador + " veces"
-      anchors.horizontalCenter: helloWorldButton.horizontalCenter
-      anchors.top: helloWorldButton.bottom
+
+    GridLayout {
+        id: grid
+        anchors.left : ircChatId.right
+        anchors.top : parent.top
+        anchors.bottom : parent.bottom
+        anchors.right: parent.right
+
+        anchors.margins:10
+
+        columns: 3
+
+        rowSpacing : 30
+        columnSpacing  : 30
+
+        Repeater {
+            model: 9
+            Rectangle{
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                color:"black"
+                Label{
+                    //anchors.fill:parent
+                    anchors.centerIn: parent
+                    text: "Soy el boton " + modelData 
+                    font.pointSize: 8
+                    color: "white"
+                }
+                MouseArea{
+                    anchors.fill:parent
+                    onClicked: _ircHandler.sendText("Hola mundo!")
+                }
+                /*
+                Rectangle {
+                    anchors.fill:parent
+                    border.width: control.activeFocus ? 2 : 1
+                    border.color: "#888"
+                    radius: 4
+                    gradient: Gradient {
+                        GradientStop { position: 0 ; color: control.pressed ? "#ccc" : "#eee" }
+                        GradientStop { position: 1 ; color: control.pressed ? "#aaa" : "#ccc" }
+                    }
+                }*/
+            }
+        }
     }
 }
 

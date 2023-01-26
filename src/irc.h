@@ -23,6 +23,8 @@ public slots:
 
     void connected();
 
+    void sendText(QString message);
+
     //QStringList getLastWritters(){ return writters; }
 
 private:
