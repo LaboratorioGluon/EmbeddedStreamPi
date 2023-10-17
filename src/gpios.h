@@ -21,6 +21,8 @@ public slots:
     void Init(int pGpioNum);
 
     bool checkGpio(int gpioNum);
+    bool writeGpio(int gpioNum, int value);
+    bool toggleGpio(int gpioNum);
 
     void changeScreenGpio(int newValue);
 

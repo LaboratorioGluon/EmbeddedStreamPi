@@ -20,19 +20,20 @@ ApplicationWindow {
             color: "#444444"
     }
 
-    Connections {
+    /*Connections {
         target: _gpioHandler 
         function onGpioTriggered(gpioNum) { 
             var pin = gpioNum         
             _gpioHandler.changeScreenGpio(0)
         }
-    }
+    }*/
 
     // Boton de apagado
     Button{
         id:turnOffScreenButton
         text: "Off"
-        onClicked: _gpioHandler.changeScreenGpio(1)
+        //onClicked: _gpioHandler.changeScreenGpio(1)
+	onClicked: _gpioHandler.toggleGpio(22)
         anchors.right: parent.right
         anchors.top: parent.top
     }

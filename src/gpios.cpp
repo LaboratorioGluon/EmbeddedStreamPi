@@ -28,18 +28,30 @@ void ISR(){
 
 gpioHandler::gpioHandler()
 {
-    //wiringPiSetup () ;
-    qDebug() << "Initialize: " << wiringPiSetupSys();
-    pinMode(SCREEN_ONOFF, OUTPUT);
+    wiringPiSetup () ;
+    //qDebug() << "Initialize: " << wiringPiSetupSys();
+    /*pinMode(SCREEN_ONOFF, OUTPUT);
     pinMode (21, INPUT);
     wiringPiISR(21, INT_EDGE_RISING, ISR);
 
-    pinMode(SCREEN_ONOFF, OUTPUT);
+    pinMode(SCREEN_ONOFF, OUTPUT);*/
 }
 
 bool gpioHandler::checkGpio(int gpioNum)
 {
     return digitalRead(gpioNum);
+}
+
+bool gpioHandler::writeGpio(int gpioNum, int value)
+{
+    digitalWrite(gpioNum, value);
+    return true;
+}
+
+bool gpioHandler::toggleGpio(int gpioNum)
+{
+    digitalWrite(gpioNum, !digitalRead(gpioNum));
+    return true;
 }
 
 void gpioHandler::Init(int pGpioNum)
